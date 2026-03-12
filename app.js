@@ -1,3 +1,4 @@
+const API_URL = "http://localhost:5000";
 let gameSeq = [];
 let userSeq = [];
 let btns = ["yellow", "red", "purple", "green"];
@@ -17,14 +18,14 @@ btn_el.addEventListener("click", function (){
     }
 });
 
-document.addEventListener("keypress", function (){
-    if(started == false){
-        console.log("Game is Started");
-        started = true;
+// document.addEventListener("keypress", function (){
+//     if(started == false){
+//         console.log("Game is Started");
+//         started = true;
 
-        levelUp();
-    }
-});
+//         levelUp();
+//     }
+// });
 
 function gameFlash(btn){
     btn.classList.add("flash");
@@ -61,6 +62,7 @@ function checkAns(idx){
         if(level > highScore){
         highScore = level;
     }
+        saveScore(level);
         h2.innerHTML = `Game Over 😢 <br> Your Score: <b>${level}</b> <br><span style="font-size:16px;">Click Start to Play Again</span>`; 
          h1.innerText = `Simon Says Game | High Score: ${highScore}`;
         document.querySelector("body").style.backgroundColor = "red";
@@ -92,4 +94,20 @@ function reset(){
     gameSeq = [];
     userSeq = [];
     level = 0;
+}
+function saveScore(score){
+
+    let nameInput = document.getElementById("playerName");
+    let name = nameInput ? nameInput.value : "Player";
+
+    fetch(API_URL + "/score",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            name:name,
+            score:score
+        })
+    });
 }

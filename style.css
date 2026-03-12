@@ -59,7 +59,7 @@ h2{
 
 /* Start Button */
 #btn_el{
-    display: none;
+    display: block;
     background-color: white;
     width: 120px;
     height: 40px;
