@@ -1,4 +1,139 @@
+// const API_URL = "http://localhost:5000";
+// let gameSeq = [];
+// let userSeq = [];
+// let btns = ["yellow", "red", "purple", "green"];
+// let started = false;
+// let level = 0;
+// let btn_el = document.querySelector("#btn_el");
+// let highScore = 0;
+// let h2 = document.querySelector("h2");
+// let h1 = document.querySelector("h1");
+
+// btn_el.addEventListener("click", function (){
+//     if(started == false){
+//         console.log("Game is Started");
+//         started = true;
+
+//         levelUp();
+//     }
+// });
+
+// // document.addEventListener("keypress", function (){
+// //     if(started == false){
+// //         console.log("Game is Started");
+// //         started = true;
+
+// //         levelUp();
+// //     }
+// // });
+
+// function gameFlash(btn){
+//     btn.classList.add("flash");
+//     setTimeout(function (){
+//         btn.classList.remove("flash");
+//     }, 250);
+// }
+
+// function userFlash(btn){
+//     btn.classList.add("userflash");
+//     setTimeout(function(){
+//         btn.classList.remove("userflash");
+//     }, 250);
+// }
+
+// function levelUp(){
+//     userSeq = [];
+//     level++;
+//     h2.innerText = `Level ${level}`;
+
+//     let randIdx = Math.floor(Math.random()*4);
+//     let randColor = btns[randIdx];
+//     let randBtn = document.querySelector(`.${randColor}`);
+//     gameSeq.push(randColor);
+//     gameFlash(randBtn);
+// }
+// let currLevel = 0;
+// function checkAns(idx){
+//     if(userSeq[idx] === gameSeq[idx]){
+//         if(userSeq.length == gameSeq.length){
+//             setTimeout(levelUp, 1000);
+//         }
+//     }else{
+//         if(level > highScore){
+//         highScore = level;
+//     }
+//         saveScore(level);
+//         h2.innerHTML = `Game Over 😢 <br> Your Score: <b>${level}</b> <br><span style="font-size:16px;">Click Start to Play Again</span>`; 
+//          h1.innerText = `Simon Says Game | High Score: ${highScore}`;
+//         document.querySelector("body").style.backgroundColor = "red";
+//         setTimeout(function (){
+//             document.querySelector("body").style.backgroundColor = "#D6CA98";
+//         }, 150);
+
+       
+//         reset();
+//     }
+// }
+
+// function btnPress(){
+//     let btn = this;
+//     userFlash(btn);
+//     userColor = btn.getAttribute("id");
+//     userSeq.push(userColor);
+
+//     checkAns(userSeq.length-1);
+// }
+
+// let allBtns = document.querySelectorAll(".btn")
+// for(let btn of allBtns){
+//     btn.addEventListener("click", btnPress);
+// }
+
+// function reset(){
+//     started = false;
+//     gameSeq = [];
+//     userSeq = [];
+//     level = 0;
+// }
+// function saveScore(score){
+//     let nameInput = document.getElementById("playerName");
+//     let name = nameInput ? nameInput.value : "Player";
+
+//     fetch("http://localhost:5000/score", {
+//         method:"POST",
+//         headers:{"Content-Type":"application/json"},
+//         body: JSON.stringify({name, score})
+//     }).then(updateLeaderboard); // automatically updates leaderboard after saving
+// }
+// // function saveScore(score){
+
+// //     let nameInput = document.getElementById("playerName");
+// //     let name = nameInput ? nameInput.value : "Player";
+
+// //     fetch(API_URL + "/score",{
+// //         method:"POST",
+// //         headers:{
+// //             "Content-Type":"application/json"
+// //         },
+// //         body:JSON.stringify({
+// //             name:name,
+// //             score:score
+// //         })
+// //     });
+// // }
+// async function updateLeaderboard(){
+//     const res = await fetch("http://localhost:5000/leaderboard");
+//     const data = await res.json();
+//     const ul = document.getElementById("leaderboard");
+//     ul.innerHTML = "";
+//     data.forEach(entry => {
+//         const li = document.createElement("li");
+//         li.innerText = `${entry.name}: ${entry.score}`;
+//         ul.appendChild(li);
+//     });
+// }
 const API_URL = "http://localhost:5000";
+
 let gameSeq = [];
 let userSeq = [];
 let btns = ["yellow", "red", "purple", "green"];
@@ -9,23 +144,14 @@ let highScore = 0;
 let h2 = document.querySelector("h2");
 let h1 = document.querySelector("h1");
 
+// Start game when Start button clicked
 btn_el.addEventListener("click", function (){
-    if(started == false){
-        console.log("Game is Started");
+    if(!started){
         started = true;
-
         levelUp();
+        updateLeaderboard(); // refresh leaderboard on game start
     }
 });
-
-// document.addEventListener("keypress", function (){
-//     if(started == false){
-//         console.log("Game is Started");
-//         started = true;
-
-//         levelUp();
-//     }
-// });
 
 function gameFlash(btn){
     btn.classList.add("flash");
@@ -52,25 +178,24 @@ function levelUp(){
     gameSeq.push(randColor);
     gameFlash(randBtn);
 }
-let currLevel = 0;
+
 function checkAns(idx){
     if(userSeq[idx] === gameSeq[idx]){
-        if(userSeq.length == gameSeq.length){
+        if(userSeq.length === gameSeq.length){
             setTimeout(levelUp, 1000);
         }
-    }else{
+    } else {
         if(level > highScore){
-        highScore = level;
-    }
+            highScore = level;
+        }
         saveScore(level);
         h2.innerHTML = `Game Over 😢 <br> Your Score: <b>${level}</b> <br><span style="font-size:16px;">Click Start to Play Again</span>`; 
-         h1.innerText = `Simon Says Game | High Score: ${highScore}`;
+        h1.innerText = `Simon Says Game | High Score: ${highScore}`;
         document.querySelector("body").style.backgroundColor = "red";
         setTimeout(function (){
             document.querySelector("body").style.backgroundColor = "#D6CA98";
         }, 150);
 
-       
         reset();
     }
 }
@@ -78,12 +203,12 @@ function checkAns(idx){
 function btnPress(){
     let btn = this;
     userFlash(btn);
-    userColor = btn.getAttribute("id");
+    let userColor = btn.getAttribute("id");
     userSeq.push(userColor);
-
     checkAns(userSeq.length-1);
 }
 
+// Add event listeners to game buttons
 let allBtns = document.querySelectorAll(".btn")
 for(let btn of allBtns){
     btn.addEventListener("click", btnPress);
@@ -95,19 +220,37 @@ function reset(){
     userSeq = [];
     level = 0;
 }
-function saveScore(score){
 
+// Save score to backend
+function saveScore(score){
     let nameInput = document.getElementById("playerName");
     let name = nameInput ? nameInput.value : "Player";
 
-    fetch(API_URL + "/score",{
+    fetch("http://localhost:5000/score", {
         method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            name:name,
-            score:score
-        })
-    });
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({name, score})
+    }).then(updateLeaderboard); // refresh leaderboard after saving
 }
+
+// Fetch leaderboard and show on page
+async function updateLeaderboard(){
+    try {
+        const res = await fetch("http://localhost:5000/leaderboard");
+        const data = await res.json();
+        const ul = document.getElementById("leaderboard");
+        ul.innerHTML = "";
+        data.forEach(entry => {
+            const li = document.createElement("li");
+            li.innerText = `${entry.name}: ${entry.score}`;
+            ul.appendChild(li);
+        });
+    } catch(err){
+        console.error("Failed to fetch leaderboard", err);
+    }
+}
+
+// Update leaderboard on page load
+window.addEventListener("DOMContentLoaded", () => {
+    updateLeaderboard();
+});
