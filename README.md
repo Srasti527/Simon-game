@@ -23,7 +23,8 @@ This project was created to practice:
 
 - HTML5
 - CSS3
-- JavaScript (Vanilla JS)
+- JavaScript
+- Node.js
 
 ## 🎯 How to Play
 
