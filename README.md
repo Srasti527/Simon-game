@@ -25,6 +25,7 @@ This project was created to practice:
 - CSS3
 - JavaScript
 - Node.js
+- Express.js
 
 ## 🎯 How to Play
 
